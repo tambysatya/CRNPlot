@@ -3,8 +3,10 @@ import libsbml
 import graph 
 from graph import VertexType
 
+import argparse
+import subprocess
 
-test_mdl = libsbml.readSBML("test.xml").getModel()
+
 
 
 
@@ -63,28 +65,4 @@ def buildGraph (mdl):
 
 
         
-def get_dotfile(mdl):
-    g = buildGraph(mdl)
-    mplugins = mdl.getPlugin("groups")
-    groups = mplugins.getListOfGroups()
-
-    grouped_vertices = []
-
-    for group in groups:
-        name = group.getName()
-        print ("processing group: ", group)
-        vertices = []
-        for member in group.getListOfMembers():
-            vertices.append(member.id_ref)
-        grouped_vertices.append((name, vertices))
-        print ("\tmembers=", vertices)
-    
-    g.toDot ("test.dot", grouped_vertices)
-
-
-
-
-            
-            
-
 
