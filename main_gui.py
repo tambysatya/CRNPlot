@@ -1,6 +1,7 @@
 
 from tkinter import filedialog, Tk
-import os
+from dotfiles import *
+import os, sys
 
 
 
@@ -21,10 +22,10 @@ if __name__ == '__main__':
 
     directory_path = filedialog.askdirectory(title='Select Directory to Save Output')
 
-    files_names = [os.path.basename(file_path).split('.')[1] for file_path in files_paths]
+    files_names = [os.path.basename(file_path).split('.')[0] for file_path in files_paths]
 
     for file_path, file_name in zip (files_paths,files_names):
-        print (file_path, file_name, directory_path)
-
-
-
+       
+        output_dotfile = directory_path+"/"+file_name + ".dot"
+        output_png = directory_path+"/"+file_name + ".png"
+        plot_graph(file_path,output_png)
