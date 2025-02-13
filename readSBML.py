@@ -36,7 +36,11 @@ def buildGraph (mdl):
         if name == None:
             name=identifier
         print("processing reaction: ", name) 
-        g.addVertex(identifier, name, VertexType.REACTION)
+        if reaction.getReversible():
+            g.addVertex(identifier, name, VertexType.REVERSIBLE_REACTION)
+        else:
+            g.addVertex(identifier, name, VertexType.IRREVERSIBLE_REACTION)
+
 
         for modifier in reaction.getListOfModifiers():
             modifier_id = modifier.getSpecies()

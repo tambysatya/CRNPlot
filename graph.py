@@ -1,10 +1,25 @@
 
 from enum import Enum
+import random
+
+
+
+def random_color():
+        red = random.randint(128,255)
+        green = random.randint(128,255)
+        blue = random.randint(128,255)
+
+        red_hex = hex(red)[2:]
+        green_hex = hex(green)[2:]
+        blue_hex = hex(blue)[2:]
+        return f"\"#{red_hex}{green_hex}{blue_hex}\""
+
 
 class VertexType (Enum):
-    REACTION = 1
-    SPECIE = 2
-    MODIFIER = 3
+    REVERSIBLE_REACTION = 1
+    IRREVERSIBLE_REACTION = 2
+    SPECIE = 3
+    MODIFIER = 4
 
 class Vertex:
     def __init__ (self, identifier, name, vertex_type):
@@ -54,14 +69,17 @@ class Graph:
             for group_name, group in grouped_vertices:
                 file.write("subgraph cluster_" + group_name +"{\n")
                 file.write ("label="+ group_name + "\n")
-                file.write ("graph[style=dotted]\n")
+                file.write ("bgcolor=\"#ededed\"\n")
+                #file.write ("graph[style=dotted]\n")
                 for v in group:
                     file.write (v)
                     match self.vertices[v].vertex_type:
-                        case VertexType.REACTION:
-                            file.write("\t[shape=box]\n")
-                        case _:
-                            file.write ("\t[shape=circle]\n")
+                        case VertexType.REVERSIBLE_REACTION:
+                            file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
+                        case VertexType.IRREVERSIBLE_REACTION:
+                            file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
+                        case VertexType.SPECIE:
+                            file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
 
 
                 file.write ("}")
@@ -69,7 +87,7 @@ class Graph:
             for edge in self.directed:
                 file.write (f"{edge[0]} -> {edge[1]}\n")
             for edge in self.undirected:
-                file.write (f"{edge[0]} -> {edge[1]} [dir=None]\n")
+                file.write (f"{edge[0]} -> {edge[1]} [dir=none]\n")
 
             file.write ("}")
 
