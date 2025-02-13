@@ -35,7 +35,7 @@ def plot_graph (model_filename, output_filename):
 
     print ("[*] generating the dotfile...")
     get_dotfile(model_filename, dotfilename)
-    print ("[*] dotfile generated. Generating the png...")
+    print (f"[*] dotfile generated at {dotfilename}. Generating the png...")
     compile_dotfile(dotfilename, output_filename)
     print ("[*] cleaning the dotfile...")
     os.system (f"rm  {dotfilename}")

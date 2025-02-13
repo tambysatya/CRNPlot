@@ -3,6 +3,7 @@ from enum import Enum
 import random
 
 
+modifier_edge_color = "\"#3191f3\"" # color of the edges between modifiers and reactions
 
 def random_color():
         red = random.randint(128,255)
@@ -13,6 +14,8 @@ def random_color():
         green_hex = hex(green)[2:]
         blue_hex = hex(blue)[2:]
         return f"\"#{red_hex}{green_hex}{blue_hex}\""
+
+
 
 
 class VertexType (Enum):
@@ -56,16 +59,6 @@ class Graph:
     def toDot(self, filename, grouped_vertices):
         with open(filename, "w") as file:
             file.write("digraph {\n")
-
-            #for v in self.vertices:
-            #    file.write (v)
-            #    match self.vertices[v].vertex_type:
-            #        case VertexType.REACTION:
-            #            file.write(" [shape=box]")
-            #        case _:
-            #            file.write ("[shape=circle]")
-            #    file.write("\n")
-
             for group_name, group in grouped_vertices:
                 file.write("subgraph cluster_" + group_name +"{\n")
                 file.write ("label="+ group_name + "\n")
@@ -87,7 +80,7 @@ class Graph:
             for edge in self.directed:
                 file.write (f"{edge[0]} -> {edge[1]}\n")
             for edge in self.undirected:
-                file.write (f"{edge[0]} -> {edge[1]} [dir=none]\n")
+                file.write (f"{edge[0]} -> {edge[1]} [dir=none color={modifier_edge_color}]\n")
 
             file.write ("}")
 
