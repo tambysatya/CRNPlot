@@ -1,4 +1,4 @@
-# CNRPLOT: a tool for plotting Chemical Reaction Networks
+# CRNPLOT: a tool for plotting Chemical Reaction Networks
 
 
 # usage:
