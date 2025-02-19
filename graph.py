@@ -2,21 +2,10 @@
 from enum import Enum
 import random
 
+from utils import *
+
 
 modifier_edge_color = "\"#3191f3\"" # color of the edges between modifiers and reactions
-
-def random_color():
-        red = random.randint(128,255)
-        green = random.randint(128,255)
-        blue = random.randint(128,255)
-
-        red_hex = hex(red)[2:]
-        green_hex = hex(green)[2:]
-        blue_hex = hex(blue)[2:]
-        return f"\"#{red_hex}{green_hex}{blue_hex}\""
-
-
-
 
 class VertexType (Enum):
     REVERSIBLE_REACTION = 1
@@ -56,10 +45,10 @@ class Graph:
         print ("undirected edges", str(self.undirected_neighbors))
 
 
-    def toDot(self, filename, grouped_vertices):
+    def toDot(self, filename, grouped_vertices, colors=None):
         with open(filename, "w") as file:
             file.write("digraph {\n")
-            for group_name, group in grouped_vertices:
+            for group_name, group in grouped_vertices.items():
                 file.write("subgraph cluster_" + group_name +"{\n")
                 file.write ("label="+ group_name + "\n")
                 file.write ("bgcolor=\"#ededed\"\n")
@@ -72,7 +61,10 @@ class Graph:
                         case VertexType.IRREVERSIBLE_REACTION:
                             file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
                         case VertexType.SPECIE:
-                            file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
+                            if None == colors:
+                                file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
+                            else:
+                                file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
 
 
                 file.write ("}")
