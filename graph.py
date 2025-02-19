@@ -50,7 +50,7 @@ class Graph:
             file.write("digraph {\n")
             for group_name, group in grouped_vertices.items():
                 file.write("subgraph cluster_" + group_name +"{\n")
-                file.write ("label="+ group_name + "\n")
+                #file.write ("label="+ group_name + "\n")
                 file.write ("bgcolor=\"#ededed\"\n")
                 #file.write ("graph[style=dotted]\n")
                 for v in group:

@@ -22,6 +22,7 @@ if __name__ == '__main__':
     ig = args.interaction_file
     rm_dot = args.remove_dot
 
+
     if None == cnr and None == qg and None == ig:
         parser.print_help()
         exit(1)

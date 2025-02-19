@@ -11,7 +11,10 @@ then
 fi
 for mdl in `ls $INPUT_DIR`
 do
+	PREFIX=`basename $mdl .xml`
 	input="$INPUT_DIR/$mdl"
-	output="$OUTPUT_DIR/`basename $mdl xml`png"
-	python main.py -i $input -o $output
+	cnr="$OUTPUT_DIR/${PREFIX}_cnr.png"
+	ig="$OUTPUT_DIR/${PREFIX}_ig.png"
+	qg="$OUTPUT_DIR/${PREFIX}_qg.png"
+	python main.py -i $input -cnr $cnr -ig $ig -qg $qg #--remove_dot
 done

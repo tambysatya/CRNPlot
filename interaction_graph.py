@@ -56,11 +56,9 @@ class InteractionGraph ():
     def add_reaction (self, reactants, products, modifiers):
         for r in reactants:
             reactant = r.getSpecies()
-            self.species.add(reactant)
             self.add_edge(reactant, reactant) #self loop
             for p in products:
                 product = p.getSpecies() 
-                self.species.add(product)
                 self.add_edge (reactant, product) #interactions between each pair (reactant, product)
         
         for xi, xj in combinations(reactants,2):
@@ -71,7 +69,6 @@ class InteractionGraph ():
 
         for m in modifiers:
             modifier = m.getSpecies()
-            self.species.add(modifier)
             for reactant in reactants:
                 self.add_edge (modifier, reactant.getSpecies())
             for product in products:
@@ -79,6 +76,9 @@ class InteractionGraph ():
 
     def build_interaction_graph (self, mdl):
 
+
+        for specie in mdl.getListOfSpecies():
+            self.species.add(specie.getId())
         reactions = mdl.getListOfReactions()
 
         for reaction in reactions:
@@ -97,6 +97,7 @@ def interaction_graph_to_dot(g, filename, colors=None):
         #file.write ("concentrate=true\n")
         for group_name, group in g.groups.items():
             file.write ("subgraph cluster_" + group_name + "{\n")
+            file.write ("bgcolor=\"#ededed\"\n")
             #file.write ("peripheries=0\n")
             for v in group:
                 if v in g.species:
@@ -119,6 +120,7 @@ def quotient_graph_to_dot (g, filename, colors=None):
         for group_name, group in g.groups.items():
             file.write ("subgraph cluster_" + group_name + "{\n")
             #file.write ("peripheries=0\n")
+            file.write ("bgcolor=\"#ededed\"\n")
             for v in group:
                 if v in g.species:
                     if None == colors:
@@ -157,24 +159,8 @@ def quotient_graph_to_dot (g, filename, colors=None):
 
         for group_i, group_j in group_directed_edges:
            xi, xj = g.groups[group_i][0], g.groups[group_j][0]
-           file.write (f"{xi} -> {xj} [ltail=cluster_{group_i} lhead=cluster_{group_j}]\n")
+           file.write (f"{xi} -> {xj} [ltail=cluster_{group_i} lhead=cluster_{group_j} color=\"#3191f3\"]\n")
         for group_i, group_j in group_undirected_edges:
            xi, xj = g.groups[group_i][0], g.groups[group_j][0]
-           file.write (f"{xi} -> {xj} [ltail=cluster_{group_i} lhead=cluster_{group_j} dir=both]\n")
+           file.write (f"{xi} -> {xj} [ltail=cluster_{group_i} lhead=cluster_{group_j} dir=both color=\"#3191f3\"]\n")
         file.write("}")
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input_file", help="the sbml file to be processed.", required=True)
-    parser.add_argument("-o", "--output_file", help="the output dot file.", required=True)
-    args = parser.parse_args()
-
-    mdl = libsbml.readSBML(args.input_file).getModel()
-    g = InteractionGraph(mdl)
-
-    interaction_graph_to_dot(g, args.output_file)
-    quotient_graph_to_dot(g, "quotient.dot")
-
-
-
-
