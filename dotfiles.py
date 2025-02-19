@@ -29,7 +29,7 @@ def compile_dotfile (dotfilename, pngfilename):
     os.system(f"dot -Tpng {dotfilename} > {pngfilename}")
 
 
-def plot_graph (model_filename, output_filename):
+def plot_graph (model_filename, output_filename, remove_dot=True):
     base_output = os.path.basename(output_filename).split('.')[0]
     dotfilename = base_output + ".dot"
 
@@ -37,7 +37,9 @@ def plot_graph (model_filename, output_filename):
     get_dotfile(model_filename, dotfilename)
     print (f"[*] dotfile generated at {dotfilename}. Generating the png...")
     compile_dotfile(dotfilename, output_filename)
-    print ("[*] cleaning the dotfile...")
-    os.system (f"rm  {dotfilename}")
+    
+    if remove_dot:
+        print ("[*] cleaning the dotfile...")
+        os.system (f"rm  {dotfilename}")
 
 
