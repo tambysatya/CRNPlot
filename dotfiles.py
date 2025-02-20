@@ -30,9 +30,9 @@ def compile_dotfile (dotfilename, pngfilename):
 
     extension = pngfilename.split('.')[-1]
     if extension == 'png':
-        os.system(f"dot -Tpng {dotfilename} > {pngfilename}")
+        os.system(f"circo -Tpng {dotfilename} > {pngfilename}")
     else:
-        os.system(f"dot -Tsvg {dotfilename} > {pngfilename}")
+        os.system(f"circo -Tsvg {dotfilename} > {pngfilename}")
 
 
 def plot_graph (model_filename, output_filename, remove_dot=True):

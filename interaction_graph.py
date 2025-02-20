@@ -16,6 +16,7 @@ class InteractionGraph ():
         self.directed_edges= set()
         self.undirected_edges = set()
         self.species = set()
+        self.connected_vertices = set()
 
         self.groups = {} # map :: Group_Name -> [Vertex]
         self.vertex_group = {} # map :: Vertex -> Group_Name
@@ -34,6 +35,9 @@ class InteractionGraph ():
     def add_edge (self, x, y):
         xy = (x,y)
         yx = (y,x)
+
+        self.connected_vertices.add(x)
+        self.connected_vertices.add(y)
         
         if xy in self.undirected_edges or yx in self.undirected_edges:
             return
@@ -91,7 +95,7 @@ class InteractionGraph ():
                 self.add_reaction (products, reactants, modifiers)
 
 
-def interaction_graph_to_dot(g, filename, colors=None):
+def interaction_graph_to_dot(g, filename, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
         #file.write ("concentrate=true\n")
@@ -100,7 +104,7 @@ def interaction_graph_to_dot(g, filename, colors=None):
             file.write ("bgcolor=\"#ededed\"\n")
             #file.write ("peripheries=0\n")
             for v in group:
-                if v in g.species:
+                if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
                     if None == colors:
                         file.write (v + f"[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
                     else:
@@ -108,12 +112,14 @@ def interaction_graph_to_dot(g, filename, colors=None):
             file.write("}\n")
 
         for xi, xj in g.directed_edges:
-            file.write (f"{xi} -> {xj}\n")
+            if discard_self_loops == False or xi != xj:
+                file.write (f"{xi} -> {xj}\n")
         for xi, xj in g.undirected_edges:
-            file.write (f"{xi} -> {xj} [dir=both]\n")
+            if discard_self_loops == False or xi != xj:
+                file.write (f"{xi} -> {xj} [dir=both]\n")
         file.write("}")
 
-def quotient_graph_to_dot (g, filename, colors=None):
+def quotient_graph_to_dot (g, filename, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
         file.write ("compound=true\n")
@@ -122,7 +128,7 @@ def quotient_graph_to_dot (g, filename, colors=None):
             #file.write ("peripheries=0\n")
             file.write ("bgcolor=\"#ededed\"\n")
             for v in group:
-                if v in g.species:
+                if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
                     if None == colors:
                         file.write (v + f"[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
                     else:
@@ -135,7 +141,8 @@ def quotient_graph_to_dot (g, filename, colors=None):
         for xi, xj in g.directed_edges:
             group_i, group_j = g.vertex_group[xi], g.vertex_group[xj]
             if group_i == group_j:
-                file.write (f"{xi} -> {xj}\n")
+                if discard_self_loops == False or xi != xj:
+                    file.write (f"{xi} -> {xj}\n")
             elif (group_i, group_j) in group_undirected_edges:
                 pass
             elif (group_j, group_i) in group_directed_edges:
@@ -147,7 +154,8 @@ def quotient_graph_to_dot (g, filename, colors=None):
         for xi, xj in g.undirected_edges:
             group_i, group_j = g.vertex_group[xi], g.vertex_group[xj]
             if group_i == group_j:
-                file.write (f"{xi} -> {xj} [dir=both] \n")
+                if discard_self_loops == False or xi != xj:
+                    file.write (f"{xi} -> {xj} [dir=both] \n")
             elif (group_i, group_j) in group_undirected_edges:
                 pass
             elif (group_j, group_i) in group_directed_edges:

@@ -17,5 +17,5 @@ do
 	cnr="$OUTPUT_DIR/${PREFIX}_cnr.svg"
 	ig="$OUTPUT_DIR/${PREFIX}_ig.svg"
 	qg="$OUTPUT_DIR/${PREFIX}_qg.svg"
-	python main.py -i $input -cnr $cnr -ig $ig -qg $qg --remove_dot
+	python main.py -i $input -cnr $cnr -ig $ig -qg $qg --remove-dot --no-isolated-species --no-self-loops
 done
