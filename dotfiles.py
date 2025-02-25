@@ -29,9 +29,9 @@ def compile_dotfile (dotfilename, pngfilename):
 
     extension = pngfilename.split('.')[-1]
     if extension == 'png':
-        os.system(f"circo -Tpng {dotfilename} > {pngfilename}")
+        os.system(f"dot -Tpng {dotfilename} > {pngfilename}")
     else:
-        os.system(f"circo -Tsvg {dotfilename} > {pngfilename}")
+        os.system(f"dot -Tsvg {dotfilename} > {pngfilename}")
 
 
 def remove_dotfile (filename):
