@@ -1,7 +1,6 @@
 
 import libsbml
-import graph
-from readSBML import buildGraph
+
 from utils import *
 
 import os
@@ -34,18 +33,6 @@ def compile_dotfile (dotfilename, pngfilename):
     else:
         os.system(f"circo -Tsvg {dotfilename} > {pngfilename}")
 
-
-def plot_graph (model_filename, output_filename, remove_dot=True):
-    dotfilename = generate_dotfile_name(output_filename)
-
-    print ("[*] generating the dotfile...")
-    get_dotfile(model_filename, dotfilename)
-    print (f"[*] dotfile generated at {dotfilename}. Generating the png...")
-    compile_dotfile(dotfilename, output_filename)
-    
-    if remove_dot:
-        print ("[*] cleaning the dotfile...")
-        os.system (f"rm  {dotfilename}")
 
 def remove_dotfile (filename):
     os.system(f"rm {filename}")
