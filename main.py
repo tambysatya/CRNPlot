@@ -4,7 +4,7 @@ import os
 import libsbml
 
 from dotfiles import *
-from readSBML import buildGraph
+from cnr_graph import *
 from interaction_graph import *
 
 if __name__ == '__main__':
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     if None != cnr:
         dotfile = generate_dotfile_name(cnr)
-        g = buildGraph(mdl)
+        g = CNRGraph(mdl)
         g.toDot(dotfile, groups, colors=colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
         compile_dotfile(dotfile, cnr)
         if rm_dot:
