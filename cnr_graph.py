@@ -29,8 +29,12 @@ class CNRGraph:
 
     
     def addVertex (self, identifier, name, vertex_type : VertexType):
+        if name== "cAMP_542_0___AMP_570_0____cAMP_PDE_647_0_":
+            print ("adding IDENTIFIER " + identifier)
         if not (identifier in self.vertices):
             self.vertices[identifier] = Vertex(identifier, name, vertex_type)
+        else:
+            print ("not adding " + identifier)
 
 
     def addDirectedEdge (self, x, y):
@@ -64,16 +68,20 @@ class CNRGraph:
                 for v in group:
                     if discard_isolated_vertices == False or v in self.connected_vertices:
                         file.write (v)
-                        match self.vertices[v].vertex_type:
-                            case VertexType.REVERSIBLE_REACTION:
-                                file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
-                            case VertexType.IRREVERSIBLE_REACTION:
-                                file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
-                            case VertexType.SPECIE:
-                                if None == colors:
-                                    file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
-                                else:
-                                    file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                        try:
+                            match self.vertices[v].vertex_type:
+                                case VertexType.REVERSIBLE_REACTION:
+                                    file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
+                                case VertexType.IRREVERSIBLE_REACTION:
+                                    file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
+                                case VertexType.SPECIE:
+                                    if None == colors:
+                                        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
+                                    else:
+                                        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                        except KeyError:
+                            print (f"Error: group member {v} in group {group_name} not found. There is no specie or reaction having this identifier.")
+                            exit(1)
                 file.write ("}")
 
             for edge in self.directed:
