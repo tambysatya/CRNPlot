@@ -69,12 +69,11 @@ class CNRGraph:
                     if discard_isolated_vertices == False or v in self.connected_vertices:
                         file.write (v)
                         try:
-                            match self.vertices[v].vertex_type:
-                                case VertexType.REVERSIBLE_REACTION:
+                            if self.vertices[v].vertex_type == VertexType.REVERSIBLE_REACTION:
                                     file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
-                                case VertexType.IRREVERSIBLE_REACTION:
+                            elif self.vertices[v].vertex_type == VertexType.IRREVERSIBLE_REACTION:
                                     file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
-                                case VertexType.SPECIE:
+                            elif self.vertices[v].vertex_type == VertexType.SPECIE:
                                     if None == colors:
                                         file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
                                     else:
