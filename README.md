@@ -15,5 +15,9 @@ python main.py -i model.xml -cnr model_cnr.png -qg model_qg.png -ig model_ig.png
 ./plot.sh input_dir output_dir
 ```
 
+# notes
+
+This work is part of the BlockBioNet project. The paper is under review.
+
 
 
