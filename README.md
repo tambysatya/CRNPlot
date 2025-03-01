@@ -17,7 +17,8 @@ python main.py -i model.xml -cnr model_cnr.png -qg model_qg.png -ig model_ig.png
 
 # notes
 
-This work is part of the BlockBioNet project. The paper is under review.
+How to cite this work:
 
+Manvel Gasparyan, Satya Tamby, G.V. HarshaRani, Upinder S. Bhalla, and Ovidiu Radulescu, Automated hierarchical block decomposition of biochemical networks
 
 
