@@ -130,6 +130,10 @@ def interaction_graph_to_dot(g, filename, colors, discard_isolated_vertices=Fals
                 file.write (f"{g.specieName(xi)} -> {g.specieName(xj)} [dir=both]\n")
         file.write("}")
 
+
+def undirected_edge (xi, xj):
+    return (min(xi,xj), max(xi,xj))
+
 def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
@@ -171,12 +175,11 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                 if group_i == group_j:
                     if discard_self_loops == False or xi != xj:
                         file.write (f"{g.specieName(xi)} -> {g.specieName(xj)}\n")
-                elif (group_i, group_j) in group_undirected_edges:
+                elif undirected_edge(group_i, group_j) in group_undirected_edges:
                     pass
                 elif (group_j, group_i) in group_directed_edges:
                     group_directed_edges.remove((group_j, group_i))
-                    group_undirected_edges.add ((group_i, group_j))
-                    group_undirected_edges.add ((group_j, group_i))
+                    group_undirected_edges.add (undirected_edge(group_i, group_j))
                 else:
                     group_directed_edges.add((group_i, group_j))
 
@@ -193,9 +196,8 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                     group = g.vertex_group[xj]
                     if (group, specie) in group_specie_directed:
                         group_specie_directed.remove((group,specie))
-                        group_specie_undirected.add((specie,group))
-                        group_specie_undirected.add((group, specie))
-                    elif not (specie,group) in group_specie_undirected:
+                        group_specie_undirected.add(undirected_edge(specie,group))
+                    elif not undirected_edge(specie,group) in group_specie_undirected:
                         specie_group_directed.add((specie,group))
                 else:
                     #edge: group -> specie
@@ -203,9 +205,8 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                     specie = xj
                     if (specie,group) in specie_group_directed:
                         specie_group_directed.remove((specie,group))
-                        group_specie_undirected.add((specie,group))
-                        group_specie_undirected.add((group,specie))
-                    elif not (group, specie) in group_specie_undirected:
+                        group_specie_undirected.add(undirected_edge(specie,group))
+                    elif not undirected_edge(group, specie) in group_specie_undirected:
                         group_specie_directed.add((group, specie))
 
 
@@ -216,12 +217,11 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                 if group_i == group_j:
                     if discard_self_loops == False or xi != xj:
                         file.write (f"{g.specieName(xi)} -> {g.specieName(xj)} [dir=both] \n")
-                elif (group_i, group_j) in group_undirected_edges:
+                elif undirected_edge(group_i, group_j) in group_undirected_edges:
                     pass
                 elif (group_j, group_i) in group_directed_edges:
                     group_directed_edges.remove((group_j, group_i))
-                    group_undirected_edges.add ((group_i, group_j))
-                    group_undirected_edges.add ((group_j, group_i))
+                    group_undirected_edges.add (undirected_edge (group_i, group_j))
                 else:
                     group_directed_edges.add((group_i, group_j))
             elif xi in remaining_species and xj in remaining_species:
@@ -236,9 +236,8 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                     group = g.vertex_group[xj]
                     if (group, specie) in group_specie_directed:
                         group_specie_directed.remove((group,specie))
-                        group_specie_undirected.add((specie,group))
-                        group_specie_undirected.add((group, specie))
-                    elif not (specie,group) in group_specie_undirected:
+                        group_specie_undirected.add(undirected_edge(specie,group))
+                    elif not undirected_edge(specie,group) in group_specie_undirected:
                         specie_group_directed.add((specie,group))
                 else:
                     #edge: group -> specie
@@ -246,9 +245,8 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
                     specie = xj
                     if (specie,group) in specie_group_directed:
                         specie_group_directed.remove((specie,group))
-                        group_specie_undirected.add((specie,group))
-                        group_specie_undirected.add((group,specie))
-                    elif not (group, specie) in group_specie_undirected:
+                        group_specie_undirected.add(undirected_edge(specie,group))
+                    elif not undirected_edge(group, specie) in group_specie_undirected:
                         group_specie_directed.add((group, specie))
 
 
