@@ -97,7 +97,7 @@ class InteractionGraph ():
         return "\"" + self.species[v] + "\""
 
 
-def interaction_graph_to_dot(g, filename, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
+def interaction_graph_to_dot(g, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
         #file.write ("concentrate=true\n")
@@ -107,10 +107,7 @@ def interaction_graph_to_dot(g, filename, colors=None, discard_isolated_vertices
             #file.write ("peripheries=0\n")
             for v in group:
                 if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
-                    if None == colors:
-                        file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
-                    else:
-                        file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                    file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
             file.write("}\n")
 
         for xi, xj in g.directed_edges:
@@ -121,7 +118,7 @@ def interaction_graph_to_dot(g, filename, colors=None, discard_isolated_vertices
                 file.write (f"{g.specieName(xi)} -> {g.specieName(xj)} [dir=both]\n")
         file.write("}")
 
-def quotient_graph_to_dot (g, filename, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
+def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
         file.write ("compound=true\n")
@@ -131,10 +128,7 @@ def quotient_graph_to_dot (g, filename, colors=None, discard_isolated_vertices=F
             file.write ("bgcolor=\"#ededed\"\n")
             for v in group:
                 if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
-                    if None == colors:
-                        file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
-                    else:
-                        file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                    file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
             file.write("}\n")
 
         group_representant = {}

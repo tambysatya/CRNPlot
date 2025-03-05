@@ -65,10 +65,7 @@ class CNRGraph:
         file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
     def displaySpecie(self, file, colors, v):
         file.write ("\""+ self.vertices[v].name + "\"")
-        if None == colors:
-            file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
-        else:
-            file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
 
     def displayVertex (self, file, colors, v):
         try:
@@ -95,7 +92,7 @@ class CNRGraph:
 
 
 
-    def toDot(self, filename, grouped_vertices, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
+    def toDot(self, filename, grouped_vertices, colors, discard_isolated_vertices=False, discard_self_loops=False):
         with open(filename, "w") as file:
             file.write("digraph {\n")
 

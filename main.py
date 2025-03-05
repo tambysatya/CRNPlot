@@ -39,7 +39,7 @@ if __name__ == '__main__':
     if None != cnr:
         dotfile = generate_dotfile_name(cnr)
         g = CNRGraph(mdl)
-        g.toDot(dotfile, groups, colors=colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
+        g.toDot(dotfile, groups, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
         compile_dotfile(dotfile, cnr)
         if rm_dot:
             remove_dotfile(dotfile)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     if None != qg:
         dotfile = generate_dotfile_name(qg)
         g = InteractionGraph(mdl)
-        quotient_graph_to_dot(g, dotfile, colors=colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
+        quotient_graph_to_dot(g, dotfile, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
         compile_dotfile(dotfile, qg)
         if rm_dot:
             remove_dotfile(dotfile)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     if None != ig:
         dotfile = generate_dotfile_name(ig)
         g = InteractionGraph(mdl)
-        interaction_graph_to_dot(g, dotfile, colors=colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
+        interaction_graph_to_dot(g, dotfile, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
         compile_dotfile(dotfile, ig)
         if rm_dot:
             remove_dotfile(dotfile)
