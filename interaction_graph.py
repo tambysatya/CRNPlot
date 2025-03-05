@@ -101,14 +101,24 @@ def interaction_graph_to_dot(g, filename, colors, discard_isolated_vertices=Fals
     with open(filename, "w") as file:
         file.write("digraph {\n")
         #file.write ("concentrate=true\n")
+        processed_species = set() #species belonging to a group
+
         for group_name, group in g.groups.items():
             file.write ("subgraph cluster_" + group_name + "{\n")
             file.write ("bgcolor=\"#ededed\"\n")
             #file.write ("peripheries=0\n")
             for v in group:
+                processed_species.add(v)
                 if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
                     file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
             file.write("}\n")
+
+        remaining_species = set(g.species).difference(processed_species) #species that are not part of a group
+        for v in remaining_species:
+            if (discard_isolated_vertices == False or v in g.connected_vertices):
+                file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+
+
 
         for xi, xj in g.directed_edges:
             if discard_self_loops == False or xi != xj:
