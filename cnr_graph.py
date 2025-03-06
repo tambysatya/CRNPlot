@@ -115,10 +115,10 @@ class CNRGraph:
 
             for edge in self.directed:
                 if discard_self_loops == False or edge[0] != edge[1]:
-                    self.displayEdge(file, edge, False)
+                    self.displayEdge(file, edge, True)
             for edge in self.undirected:
                 if discard_self_loops == False or edge[0] != edge[1]:
-                    self.displayEdge(file, edge, True)
+                    self.displayEdge(file, edge, False)
 
             file.write ("}")
 
