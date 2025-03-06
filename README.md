@@ -15,6 +15,14 @@ python main.py -i model.xml -cnr model_cnr.png -qg model_qg.png -ig model_ig.png
 ./plot.sh input_dir output_dir
 ```
 
+- To discard isolated species, add the option --no-isolated-species
+
+- To get a list of all options
+
+```
+  python main.py --help
+```
+
 # notes
 
 How to cite this work:

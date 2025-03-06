@@ -57,38 +57,68 @@ class CNRGraph:
         print ("undirected edges", str(self.undirected_neighbors))
 
 
-    def toDot(self, filename, grouped_vertices, colors=None, discard_isolated_vertices=False, discard_self_loops=False):
+    def displayReversibleReaction(self, file,v):
+        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
+    def displayIrreversibleReaction(self, file,v):
+        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
+    def displaySpecie(self, file, colors, v):
+        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+
+    def displayVertex (self, file, colors, v):
+        try:
+            if self.vertices[v].vertex_type == VertexType.REVERSIBLE_REACTION:
+                self.displayReversibleReaction(file,v)
+            elif self.vertices[v].vertex_type == VertexType.IRREVERSIBLE_REACTION:
+                self.displayIrreversibleReaction(file,v)
+            elif self.vertices[v].vertex_type == VertexType.SPECIE:
+                self.displaySpecie(file,colors,v)
+        except KeyError:
+            print (f"Error: group member {v} in group {group_name} not found. There is no specie or reaction having this identifier.")
+            exit(1)
+
+    def displayEdge (self, file, edge, directedP):
+        x,y = edge[0], edge[1]
+        xname = "\"" + self.vertices[x].name + "\""
+        yname = "\"" + self.vertices[y].name + "\""
+
+        if directedP:
+            file.write (f"{xname} -> {yname}\n")
+        else:
+            file.write (f"{xname} -> {yname} [dir=none color={modifier_edge_color}]\n")
+
+
+
+
+    def toDot(self, filename, grouped_vertices, colors, discard_isolated_vertices=False, discard_self_loops=False):
         with open(filename, "w") as file:
             file.write("digraph {\n")
+
+            positionned_vertices = set() # the set of vertices belonging to a group
             for group_name, group in grouped_vertices.items():
                 file.write("subgraph cluster_" + group_name +"{\n")
                 #file.write ("label="+ group_name + "\n")
                 file.write ("bgcolor=\"#ededed\"\n")
                 #file.write ("graph[style=dotted]\n")
                 for v in group:
+                    positionned_vertices.add(v)
                     if discard_isolated_vertices == False or v in self.connected_vertices:
-                        file.write (v)
-                        try:
-                            if self.vertices[v].vertex_type == VertexType.REVERSIBLE_REACTION:
-                                    file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
-                            elif self.vertices[v].vertex_type == VertexType.IRREVERSIBLE_REACTION:
-                                    file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
-                            elif self.vertices[v].vertex_type == VertexType.SPECIE:
-                                    if None == colors:
-                                        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={random_color()}]\n")
-                                    else:
-                                        file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
-                        except KeyError:
-                            print (f"Error: group member {v} in group {group_name} not found. There is no specie or reaction having this identifier.")
-                            exit(1)
+                        self.displayVertex(file, colors, v)
                 file.write ("}")
+
+            remaining_vertices = set(self.vertices).difference(positionned_vertices) #the vertices that have not been positionned
+            for v in remaining_vertices:
+                    if discard_isolated_vertices == False or v in self.connected_vertices:
+                        self.displayVertex(file, colors, v)
 
             for edge in self.directed:
                 if discard_self_loops == False or edge[0] != edge[1]:
-                    file.write (f"{edge[0]} -> {edge[1]}\n")
+                    self.displayEdge(file, edge, True)
             for edge in self.undirected:
                 if discard_self_loops == False or edge[0] != edge[1]:
-                    file.write (f"{edge[0]} -> {edge[1]} [dir=none color={modifier_edge_color}]\n")
+                    self.displayEdge(file, edge, False)
 
             file.write ("}")
 
