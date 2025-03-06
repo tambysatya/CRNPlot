@@ -17,7 +17,11 @@ python main.py -i model.xml -cnr model_cnr.png -qg model_qg.png -ig model_ig.png
 
 - To discard isolated species, add the option --no-isolated-species
 
-- To get a list of all options 
+- To get a list of all options
+
+```
+  python main.py --help
+```
 
 # notes
 
