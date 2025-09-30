@@ -135,6 +135,10 @@ def undirected_edge (xi, xj):
     return (min(xi,xj), max(xi,xj))
 
 def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
+    rank_colors = {}
+    for rank in ranks.values():
+        if rank:
+            rank_colors[rank] = random_color()
     with open(filename, "w") as file:
         file.write("digraph {\n")
         file.write ("compound=true\n")
@@ -145,8 +149,10 @@ def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices
             rank = ranks[group_name]
             if rank:
                 file.write("label="+ rank+"\n")
+                file.write("bgcolor="+ rank_colors[rank]+"\n")
+            else:
+                file.write ("bgcolor=\"#ededed\"\n")
             #file.write ("peripheries=0\n")
-            file.write ("bgcolor=\"#ededed\"\n")
             for v in group:
                 processed_species.add(v)
                 if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
