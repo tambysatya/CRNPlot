@@ -4,7 +4,7 @@ import os
 import libsbml
 
 from dotfiles import *
-from cnr_graph import *
+from crn_graph import *
 from interaction_graph import *
 
 if __name__ == '__main__':
