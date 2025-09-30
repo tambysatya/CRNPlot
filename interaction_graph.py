@@ -21,7 +21,7 @@ class InteractionGraph ():
         self.groups = {} # map :: Group_Name -> [Vertex]
         self.vertex_group = {} # map :: Vertex -> Group_Name
 
-        groups = get_groups(mdl)
+        groups, ranks = get_groups(mdl)
         if groups == []:
             self.has_groups = False
         else:
@@ -134,7 +134,7 @@ def interaction_graph_to_dot(g, filename, colors, discard_isolated_vertices=Fals
 def undirected_edge (xi, xj):
     return (min(xi,xj), max(xi,xj))
 
-def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
+def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
     with open(filename, "w") as file:
         file.write("digraph {\n")
         file.write ("compound=true\n")
@@ -142,6 +142,9 @@ def quotient_graph_to_dot (g, filename, colors, discard_isolated_vertices=False,
 
         for group_name, group in g.groups.items():
             file.write ("subgraph cluster_" + group_name + "{\n")
+            rank = ranks[group_name]
+            if rank:
+                file.write("label="+ rank+"\n")
             #file.write ("peripheries=0\n")
             file.write ("bgcolor=\"#ededed\"\n")
             for v in group:

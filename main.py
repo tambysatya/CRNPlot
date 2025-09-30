@@ -33,7 +33,7 @@ if __name__ == '__main__':
         exit(1)
 
     mdl = libsbml.readSBML(args.input_file).getModel()
-    groups = get_groups(mdl)
+    groups, ranks = get_groups(mdl)
     colors = generate_colors_for_species(mdl)
 
     if None != cnr:
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     if None != qg:
         dotfile = generate_dotfile_name(qg)
         g = InteractionGraph(mdl)
-        quotient_graph_to_dot(g, dotfile, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
+        quotient_graph_to_dot(g,ranks, dotfile, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
         compile_dotfile(dotfile, qg)
         if rm_dot:
             remove_dotfile(dotfile)

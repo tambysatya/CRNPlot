@@ -2,6 +2,7 @@
 import libsbml
 import random
 import os
+import re
 
 
 def random_color():
@@ -22,6 +23,7 @@ def get_groups (mdl):
     """
     mplugins = mdl.getPlugin("groups")
     grouped_vertices = {}
+    ranks = {}
 
     if mplugins != None:
         groups = mplugins.getListOfGroups()
@@ -32,10 +34,16 @@ def get_groups (mdl):
             vertices = []
             for member in group.getListOfMembers():
                 vertices.append(member.id_ref)
+            annotations = group.getAnnotationString()
+            match = re.search("<rank>([0-9]+)</rank>", annotations)
+            rank=None
+            if match:
+                rank = match.group(1)
             grouped_vertices[name] = vertices
-            print ("\tmembers=", vertices)
+            ranks[name] = rank
+            print ("\tmembers=", vertices, " rank=", rank)
         
-    return grouped_vertices
+    return grouped_vertices, ranks
 
 
 def generate_colors_for_species(mdl):
