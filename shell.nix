@@ -11,6 +11,7 @@ let
 in pkgs.mkShell {
   buildInputs = [
     pkgs.libsbml
+    pkgs.graphviz
     pkgs.python312
     pkgs.virtualenv
     pkgs.zlib pkgs.expat

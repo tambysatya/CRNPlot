@@ -4,6 +4,8 @@ from itertools import combinations
 import argparse
 import random
 
+from itertools import groupby
+from operator import itemgetter
 from utils import *
 
 
@@ -136,27 +138,40 @@ def undirected_edge (xi, xj):
 
 def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices=False, discard_self_loops=False):
     rank_colors = {}
+    has_ranks = False
     for rank in ranks.values():
         if rank:
             rank_colors[rank] = random_color()
+            has_ranks = True
+    if not has_ranks:
+        raise RuntimeError ("Cannot compute the quotient graph if there is no rank annotations in the SBML")
+    groups =list( g.groups.items()) # [group_name, [member1 .. memberN]]
+    #We regroups the group according to their rank
+    groups = sorted(groups,key= lambda g: ranks[g[0]], reverse=True)
+    hierarchy = groupby (groups, key=lambda g: ranks[g[0]])
+
+        
+
     with open(filename, "w") as file:
         file.write("digraph {\n")
         file.write ("compound=true\n")
         processed_species = set() #species belonging to a group
-
-        for group_name, group in g.groups.items():
-            file.write ("subgraph cluster_" + group_name + "{\n")
-            rank = ranks[group_name]
-            if rank:
-                file.write("label="+ rank+"\n")
-                file.write("bgcolor="+ rank_colors[rank]+"\n")
-            else:
+        
+        for rank, groups_list in hierarchy:
+            file.write ("subgraph cluster_" + rank + "{\n") #We open a cluster at each hierarchical level
+            file.write("bgcolor="+ rank_colors[rank]+"\n")
+            file.write("label="+ rank+"\n")
+            for group_name, group in groups_list:
+                file.write ("subgraph cluster_" + group_name + "{\n")
+                file.write("label="+ group_name +"\n")
                 file.write ("bgcolor=\"#ededed\"\n")
-            #file.write ("peripheries=0\n")
-            for v in group:
-                processed_species.add(v)
-                if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
-                    file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                #file.write ("peripheries=0\n")
+                for v in group:
+                    processed_species.add(v)
+                    if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
+                        file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
+                file.write("}\n")
+        for rank in rank_colors.keys(): #We close the nested clusters here
             file.write("}\n")
 
         remaining_species = set(g.species).difference(processed_species) #species that are not part of a group
