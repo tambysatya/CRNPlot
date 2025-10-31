@@ -23,6 +23,21 @@ python main.py -i model.xml -cnr model_cnr.png -qg model_qg.png -ig model_ig.png
   python main.py --help
 ```
 
+- remark: to display the hierarchy, simply add a rank annotation in each group declaration, e.g:
+```xml
+ <groups:listOfGroups>
+      <groups:group groups:id="group_1" groups:name="group1" groups:kind="collection">
+        <annotation>
+          <rank>1</rank>
+        </annotation>
+        <groups:listOfMembers>
+          ...
+        </groups:listOfMembers>
+      </groups:group>
+     ... 
+    </groups:listOfGroups>
+
+```
 # notes
 
 How to cite this work:
