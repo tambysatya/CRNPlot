@@ -96,7 +96,8 @@ class InteractionGraph ():
             if reaction.getReversible():
                 self.add_reaction (products, reactants, modifiers)
     def specieName (self, v):
-        return "\"" + self.species[v] + "\""
+        return "\"" + v + "\""
+        #return "\"" + self.species[v] + "\""
     def groupRepresentant (self, group):
         return self.groups[group][0]
 

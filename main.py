@@ -10,7 +10,7 @@ from interaction_graph import *
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input_file", help="the sbml file to be processed.", required=True)
-    parser.add_argument("-cnr", "--cnr_file", help="the CNR output png file.")
+    parser.add_argument("-crn", "--crn_file", help="the CRN output png file.")
     parser.add_argument("-qg", "--quotient_file", help="the quotient graph png file.")
     parser.add_argument("-ig", "--interaction_file", help="the interaction graph png file.")
     parser.add_argument("--remove-dot", help="if the dotfile should be removed", action="store_true")
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    cnr = args.cnr_file
+    crn = args.crn_file
     qg = args.quotient_file
     ig = args.interaction_file
     rm_dot = args.remove_dot
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     discard_self_loops = args.no_self_loops
 
 
-    if None == cnr and None == qg and None == ig:
+    if None == crn and None == qg and None == ig:
         parser.print_help()
         exit(1)
 
@@ -36,11 +36,11 @@ if __name__ == '__main__':
     groups, ranks = get_groups(mdl)
     colors = generate_colors_for_species(mdl)
 
-    if None != cnr:
-        dotfile = generate_dotfile_name(cnr)
+    if None != crn:
+        dotfile = generate_dotfile_name(crn)
         g = CNRGraph(mdl)
         g.toDot(dotfile, groups, colors, discard_isolated_vertices=discard_isolated_vertices, discard_self_loops=discard_self_loops)
-        compile_dotfile(dotfile, cnr)
+        compile_dotfile(dotfile, crn)
         if rm_dot:
             remove_dotfile(dotfile)
 
