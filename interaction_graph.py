@@ -96,7 +96,8 @@ class InteractionGraph ():
             if reaction.getReversible():
                 self.add_reaction (products, reactants, modifiers)
     def specieName (self, v):
-        return "\"" + self.species[v] + "\""
+        return "\"" + v + "\""
+        #return "\"" + self.species[v] + "\""
     def groupRepresentant (self, group):
         return self.groups[group][0]
 
@@ -143,12 +144,13 @@ def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices
         if rank:
             rank_colors[rank] = random_color()
             has_ranks = True
-    if not has_ranks:
-        raise RuntimeError ("Cannot compute the quotient graph if there is no rank annotations in the SBML")
-    groups =list( g.groups.items()) # [group_name, [member1 .. memberN]]
-    #We regroups the group according to their rank
-    groups = sorted(groups,key= lambda g: ranks[g[0]], reverse=True)
-    hierarchy = groupby (groups, key=lambda g: ranks[g[0]])
+    if has_ranks:
+        groups =list( g.groups.items()) # [group_name, [member1 .. memberN]]
+        #We regroups the group according to their rank
+        groups = sorted(groups,key= lambda g: ranks[g[0]], reverse=True)
+        hierarchy = groupby (groups, key=lambda g: ranks[g[0]])
+    else:
+        hierarchy = [(i,[gi]) for i,gi in enumerate(g.groups.items())]
 
         
 
@@ -158,9 +160,10 @@ def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices
         processed_species = set() #species belonging to a group
         
         for rank, groups_list in hierarchy:
-            file.write ("subgraph cluster_" + rank + "{\n") #We open a cluster at each hierarchical level
-            file.write("bgcolor="+ rank_colors[rank]+"\n")
-            file.write("label="+ rank+"\n")
+            if has_ranks:
+                file.write ("subgraph cluster_" + rank + "{\n") #We open a cluster at each hierarchical level
+                file.write("bgcolor="+ rank_colors[rank]+"\n")
+                file.write("label="+ rank+"\n")
             for group_name, group in groups_list:
                 file.write ("subgraph cluster_" + group_name + "{\n")
                 file.write("label="+ group_name +"\n")
@@ -171,8 +174,9 @@ def quotient_graph_to_dot (g, ranks, filename, colors, discard_isolated_vertices
                     if v in g.species and (discard_isolated_vertices == False or v in g.connected_vertices):
                         file.write (g.specieName(v) + f"[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
                 file.write("}\n")
-        for rank in rank_colors.keys(): #We close the nested clusters here
-            file.write("}\n")
+        if has_ranks:
+            for rank in rank_colors.keys(): #We close the nested clusters here
+                file.write("}\n")
 
         remaining_species = set(g.species).difference(processed_species) #species that are not part of a group
         for v in remaining_species:

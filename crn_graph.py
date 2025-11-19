@@ -58,13 +58,13 @@ class CNRGraph:
 
 
     def displayReversibleReaction(self, file,v):
-        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write ("\""+ self.vertices[v].identifier+ "\"")
         file.write("\t[shape=circle label=\"\" fixedsize=true width=0.3 height=0.3]\n")
     def displayIrreversibleReaction(self, file,v):
-        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write ("\""+ self.vertices[v].identifier+ "\"")
         file.write("\t[shape=square label=\"\"  fixedsize=true width=0.3 height=0.3 ]\n")
     def displaySpecie(self, file, colors, v):
-        file.write ("\""+ self.vertices[v].name + "\"")
+        file.write ("\""+ self.vertices[v].identifier+ "\"")
         file.write (f"\t[shape=rectangle style=\"rounded,filled\" fillcolor={colors[v]}]\n")
 
     def displayVertex (self, file, colors, v):
@@ -81,8 +81,8 @@ class CNRGraph:
 
     def displayEdge (self, file, edge, directedP):
         x,y = edge[0], edge[1]
-        xname = "\"" + self.vertices[x].name + "\""
-        yname = "\"" + self.vertices[y].name + "\""
+        xname = "\"" + self.vertices[x].identifier+ "\""
+        yname = "\"" + self.vertices[y].identifier+ "\""
 
         if directedP:
             file.write (f"{xname} -> {yname}\n")
